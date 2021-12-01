@@ -1,5 +1,5 @@
 {
-  "name": "naqadane-server",
+  "name": "TypeOrm-Example",
   "version": "1.0.0",
   "description": "A social network place for real criticism.",
   "main": "src/app.ts",

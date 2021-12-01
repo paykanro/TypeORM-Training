@@ -1,5 +1,4 @@
-import {BaseEntity, Entity, Column, ObjectID, ObjectIdColumn} from "typeorm";
-import { NextFunction } from "express";
+import {BaseEntity, Entity, Column, ObjectID, PrimaryGeneratedColumn, getConnection} from "typeorm";
 const mongodb = require('mongodb');
 import {Logger, CustomError} from '../tools';
 
@@ -9,8 +8,8 @@ const NAMESPACE = 'User-Entity';
 @Entity('User')
 export class User extends BaseEntity {
 
-    @ObjectIdColumn()
-    _id: ObjectID;
+    @PrimaryGeneratedColumn()
+    id:number;
 
     @Column()
     firstName: string;
@@ -54,9 +53,8 @@ export class User extends BaseEntity {
                     newUser.lastName = lastName;
                     newUser.role = role;
                     return newUser = await this.save(newUser);
-                    break;
                     default:
-                        return await this.createQueryBuilder()
+                    return await getConnection('mysql').createQueryBuilder()
                         .insert()
                         .into(this)
                         .values([{ firstName: firstName, lastName: lastName, role: role }])
@@ -80,10 +78,10 @@ export class User extends BaseEntity {
                     existingUser = await this.findOne(id);
                     if(!existingUser) throw new CustomError(404, 'General', 'User Not Found',  null);
                     return await this.delete(id);
-                default:
+                case'mysql':
                     existingUser = await this.findOne(id);
                     if(!existingUser) throw new CustomError(404, 'General', 'User Not Found',  null);
-                    return await this.createQueryBuilder()
+                    return await getConnection('mysql').createQueryBuilder()
                     .delete()
                     .from(this)
                     .where('_id = :id', { id: 1 })
@@ -109,10 +107,10 @@ export class User extends BaseEntity {
                     if(!user) throw new CustomError(404, 'General', 'User Not Found',  null);
                     let result : any = await this.update(id,updateObject);
                     return result.raw.result;
-                default:
+                case 'mysql':
                     user = await this.findOne(id);
                     if(!user) throw new CustomError(404, 'General', 'User Not Found',  null);
-                    return await this.createQueryBuilder()
+                    return await getConnection('mysql').createQueryBuilder()
                     .update(User)
                     .set(updateObject)
                     .where("id = :id", { id: 1 })
@@ -132,8 +130,8 @@ export class User extends BaseEntity {
             switch(process.env.DATABASE_TYPE){
                 case'mongodb':
                     return await this.find({select: ["firstName", "lastName"], skip:skip, take:take});
-                default:
-                    return await this.createQueryBuilder()
+                case 'mysql':
+                    return await await getConnection('mysql').createQueryBuilder()
                     .offset(skip)
                     .limit(take)
                     .where(whereClause);

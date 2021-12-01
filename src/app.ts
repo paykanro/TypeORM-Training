@@ -1,9 +1,8 @@
 import http from 'http';
 import bodyParser from 'body-parser';
 import express from 'express';
-import { Logger, errorHandler } from './tools';
+import { Logger, errorHandler, dbCreateConnection } from './tools';
 import { ServerConfig }  from './config';
-import { dbCreateConnection } from './tools/dbCreateConnection';
 import routes from './routes';
 
 const NAMESPACE = 'Server';
@@ -58,4 +57,4 @@ const httpServer = http.createServer(app);
 httpServer.on('error', serverConfig.onError);
 httpServer.listen(serverConfig.port, () => logger.info(NAMESPACE, `Server is running on ${serverConfig.host}:${serverConfig.port}`));
 
-(async () => {await dbCreateConnection('mongodb');})(); /** Connect to the database */
+(async () => {await dbCreateConnection('mysql');})(); /** Connect to the database */

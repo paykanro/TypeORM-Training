@@ -13,27 +13,16 @@ const DATABASE_PORT = process.env.DATABASE_HOST || '3306';
 const DATABASE_USERNAME = process.env.DATABASE_USERNAME || 'sa';
 const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD || 'mrp@1404';
 
-const mysqlConfig =   {
-    "type": "mysql",
-    "host": "localhost",
-    "port": 3306,
-    "username": "test",
-    "password": "test",
-    "database": "test",
-    "entities": ["src/entity/*.js"],
-    "logging": true,
-    "synchronize": true
-  }
 export class ORM{
     config :ConnectionOptions;
     mysqlConfig:any =   {
-        "name":"mysql-connection",
+        "name":"mysql",
         "type": "mysql",
         "host": "localhost",
         "port": 3306,
         "username": "root",
         "password": "mrp@1404",
-        "database": "test",
+        "database": "TypeOrm-Example",
         "entities": ["src/entities/*.ts"],
         "logging": true,
         "synchronize": true
@@ -43,7 +32,7 @@ export class ORM{
         "type": "mongodb",
         "host": "localhost",
         "port": 27017,
-        "database": "test",
+        "database": "TypeOrm-Example",
         "useNewUrlParser": true,
         "useUnifiedTopology": true,
         "synchronize": true,
